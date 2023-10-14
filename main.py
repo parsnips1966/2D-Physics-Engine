@@ -1,8 +1,8 @@
 import pygame, sys, pymunk
 
-def create_apple(space):
+def create_apple(space, pos):
     body = pymunk.Body(1, 100, body_type=pymunk.Body.DYNAMIC)
-    body.position = (400, 0)
+    body.position = pos
     shape = pymunk.Circle(body, 80)
     space.add(body, shape)
     return shape
@@ -12,6 +12,8 @@ def draw_apples(apples):
         x = int(apple.body.position.x)
         y = int(apple.body.position.y)
         pygame.draw.circle(screen, (0, 0, 0), (x, y), 80)
+        apple_rect = apple_surface.get_rect(center=(x, y))
+        screen.blit(apple_surface, apple_rect)
 
 def create_static_ball(space):
     body = pymunk.Body(body_type=pymunk.Body.STATIC)
@@ -31,8 +33,8 @@ screen = pygame.display.set_mode((800, 800))
 clock = pygame.time.Clock()
 space = pymunk.Space()
 space.gravity = (0, 500)
+apple_surface = pygame.image.load("apple.jpg")
 apples = []
-apples.append(create_apple(space))
 balls = []
 balls.append(create_static_ball(space))
 
@@ -41,6 +43,8 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            apples.append(create_apple(space, event.pos))
 
     screen.fill((217, 217, 217))
     draw_apples(apples)
