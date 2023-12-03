@@ -1,4 +1,5 @@
-import pygame, sys, pymunk
+import pygame, sys, pymunk, random
+
 
 def create_apple(space, pos):
     body = pymunk.Body(1, 100, body_type=pymunk.Body.DYNAMIC)
@@ -6,6 +7,7 @@ def create_apple(space, pos):
     shape = pymunk.Circle(body, 80)
     space.add(body, shape)
     return shape
+
 
 def draw_apples(apples):
     for apple in apples:
@@ -15,12 +17,14 @@ def draw_apples(apples):
         apple_rect = apple_surface.get_rect(center=(x, y))
         screen.blit(apple_surface, apple_rect)
 
-def create_static_ball(space):
+
+def create_static_ball(space, pos):
     body = pymunk.Body(body_type=pymunk.Body.STATIC)
-    body.position = (500, 500)
+    body.position = pos
     shape = pymunk.Circle(body, 50)
     space.add(body, shape)
     return shape
+
 
 def draw_static_balls(balls):
     for ball in balls:
@@ -28,15 +32,19 @@ def draw_static_balls(balls):
         y = int(ball.body.position.y)
         pygame.draw.circle(screen, (0, 0, 0), (x, y), 50)
 
+
 pygame.init()
 screen = pygame.display.set_mode((800, 800))
 clock = pygame.time.Clock()
 space = pymunk.Space()
 space.gravity = (0, 500)
-apple_surface = pygame.image.load("apple.jpg")
+apple_surface = pygame.image.load("apple.png")
 apples = []
 balls = []
-balls.append(create_static_ball(space))
+balls.append(create_static_ball(space, (random.randint(0, 800), random.randint(0, 800))))
+balls.append(create_static_ball(space, (random.randint(0, 800), random.randint(0, 800))))
+balls.append(create_static_ball(space, (random.randint(0, 800), random.randint(0, 800))))
+balls.append(create_static_ball(space, (random.randint(0, 800), random.randint(0, 800))))
 
 while True:
     for event in pygame.event.get():
@@ -52,4 +60,3 @@ while True:
     space.step(0.02)
     pygame.display.update()
     clock.tick(60)
-
